@@ -1,12 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, createContext } from "react";
 import List from "./List";
+import "./App.css"
 
+const ThemeContext = createContext();
 const arr = ["элемент", "элемент", "элемент", "элемент"];
 
 function App() {
   const inputRef = useRef();
   const [listElements, setListElements] = useState(arr);
   const [inputText, setInputText] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
 //добавляем в конец списка элемент
   const handleKeyUp = (e) => {
@@ -28,9 +31,11 @@ function App() {
         alert('Неверный индекс элемента');
     }
 };
-
+const toggleTheme = () => {
+  setIsDarkMode((prevMode) => !prevMode);
+};
   return (
-    <div className="App">
+    <div className={`App ${isDarkMode ? "dark-theme" : ""}`}>
       <header className="App-header">
         <input
           className="input1"
@@ -46,11 +51,15 @@ function App() {
         >
           Фокус на поле для ввода текста
         </button>
-        
        <p><List array={listElements} change={handleChange} /></p> 
+       <ThemeContext.Provider value={isDarkMode}>
+          <button onClick={toggleTheme}>Toggle Theme</button>
+          
+        </ThemeContext.Provider>
       </header>
     </div>
   );
 }
 
 export default App;
+export { ThemeContext };
